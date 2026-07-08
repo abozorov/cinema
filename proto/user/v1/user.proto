@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+package cinema.user.v1;
+
+option go_package = "github.com/abozorov/cinema/user_service/userpb/v1;user";
+
+
+service UserService {
+    rpc Add(CreateUserRequest) returns (CreateUserResponse);
+    rpc GetByID(GetUserRequest) returns (GetUserResponse);
+    rpc Update(UpdateUserRequest) returns (UpdateUserResponse);
+}
+
+message CreateUserRequest {
+  string name = 1;
+  string email = 2;
+  string phone = 3;
+  string password = 4;
+  int32 age = 5;
+}
+
+message CreateUserResponse {
+  int64 id = 1;
+}
+
+message GetUserRequest {
+  int64 id = 1;
+}
+
+message GetUserResponse {
+  int64 id = 1;
+  string name = 2;
+  string email = 3;
+  string phone = 4;
+  int32 age = 5;
+}
+
+message UpdateUserRequest {
+  int64 id = 1;
+  string name = 2;
+  string phone = 3;
+}
+
+message UpdateUserResponse {
+  int64 code = 1;
+  string message = 2;
+}
