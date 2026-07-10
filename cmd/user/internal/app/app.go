@@ -87,5 +87,6 @@ func Run(cfg *config.Config) {
 	s := initServ(cfg, logger, hndlr)
 
 	// start server
+	s.grpc.Start()
 	s.waitForShutdown(logger)
 }

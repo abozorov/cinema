@@ -1,7 +1,7 @@
 .PHONY:
 
 run:
-	go run user_service/cmd/main.go
+	go run cmd/user/main.go
 
 build_user_proto: 
 	protoc \

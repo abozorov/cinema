@@ -1,6 +1,7 @@
 package models
 
 import (
+	"context"
 	"errors"
 	"regexp"
 	"strings"
@@ -17,33 +18,33 @@ type User struct {
 	Age          int
 }
 
-// UserRepository определяет интерфейс для работы с пользователями
-type UserRepository interface {
-	GetByID(id string) (*User, error)
-	GetByEmail(email string) (*User, error)
-	Add(user *User) error
-	Update(user *User) error
-}
-
 // UserService определяет бизнес-логику для работы с пользователями
 type UserService interface {
-	GetUser(id string) (*User, error)
-	Add(name, email string) (*User, error)
-	Update(id, name, email string) (*User, error)
+	Add(ctx context.Context, user *User) (int, error)
+	GetByID(ctx context.Context, id int) (*User, error)
+	Update(ctx context.Context, user *User) error
+}
+
+// UserRepository определяет интерфейс для работы с пользователями
+type UserRepository interface {
+	Add(ctx context.Context, user *User) (int, error)
+	GetByID(ctx context.Context, id int) (*User, error)
+	GetByEmail(ctx context.Context, email string) (*User, error)
+	Update(ctx context.Context, user *User) error
 }
 
 // Validation errors
 var (
-	ErrInvalidName  = errors.New("name must be between 2 and 100 characters")
-	ErrInvalidPhone = errors.New("phone must be 12 characters")
-	ErrInvalidEmail = errors.New("invalid email format")
-	ErrInvalidAge   = errors.New("invalid age")
-	ErrUserNotFound = errors.New("user not found")
-	ErrUserExists   = errors.New("user with this email already exists")
-	ErrEmptyName    = errors.New("name cannot be empty")
-	ErrEmptyPhone   = errors.New("phone cannot be empty")
-	ErrEmptyEmail   = errors.New("email cannot be empty")
-	ErrEmptyUserID  = errors.New("user id cannot be empty")
+	ErrInvalidName   = errors.New("name must be between 2 and 100 characters")
+	ErrInvalidPhone  = errors.New("phone must be 12 characters")
+	ErrInvalidEmail  = errors.New("invalid email format")
+	ErrInvalidAge    = errors.New("invalid age")
+	ErrInvalidUSerId = errors.New("invalid user id")
+	ErrUserExists    = errors.New("user with this email already exists")
+	ErrEmptyName     = errors.New("name cannot be empty")
+	ErrEmptyPhone    = errors.New("phone cannot be empty")
+	ErrEmptyEmail    = errors.New("email cannot be empty")
+	ErrEmptyUserID   = errors.New("user id cannot be empty")
 )
 
 // emailRegex для валидации email
@@ -163,7 +164,7 @@ func validateEmail(email *string) error {
 }
 
 // Update обновляет данные пользователя
-func (u *User) Update(name, email string) error {
+func (u *User) Update(name, email, phone string, age int) error {
 	if err := validateName(&name); err != nil {
 		return err
 	}
@@ -172,8 +173,18 @@ func (u *User) Update(name, email string) error {
 		return err
 	}
 
+	if err := validatePhone(&phone); err != nil {
+		return err
+	}
+
+	if err := validateAge(&age); err != nil {
+		return err
+	}
+
 	u.Name = name
 	u.Email = email
+	u.Phone = phone
+	u.Age = age
 
 	return nil
 }
@@ -186,6 +197,14 @@ func (u *User) IsValid() error {
 	}
 
 	if err := validateEmail(&u.Email); err != nil {
+		return err
+	}
+
+	if err := validatePhone(&u.Phone); err != nil {
+		return err
+	}
+
+	if err := validateAge(&u.Age); err != nil {
 		return err
 	}
 
