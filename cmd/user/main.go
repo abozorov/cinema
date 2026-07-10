@@ -15,7 +15,7 @@ func main() {
 		log.Println("Error in path determination: ", err)
 		return
 	}
-	cfg, err := config.NewConfig(path.Join(dir, "cmd", "user", "config", ".env"))
+	cfg, err := config.NewConfig(path.Join(dir, "cmd", "user", "config", "user_config.env"))
 
 	if err != nil {
 		log.Println("Error when load config file: ", err)

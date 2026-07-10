@@ -2,9 +2,11 @@ package handler
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/abozorov/cinema/cmd/user/internal/models"
 	"github.com/abozorov/cinema/pkg/errs"
+	"google.golang.org/grpc/codes"
 )
 
 func responseErr(err error) error {
@@ -12,13 +14,13 @@ func responseErr(err error) error {
 
 	// pkg.errs errors
 	case errors.Is(err, errs.ErrBadRequest):
-		return errs.ErrBadRequest
+		return fmt.Errorf("error: %d", codes.InvalidArgument)
 	case errors.Is(err, errs.ErrBadRequestBody):
-		return errs.ErrBadRequestBody
+		return fmt.Errorf("error: %d", codes.InvalidArgument)
 	case errors.Is(err, errs.ErrTimeoutExceeded):
-		return errs.ErrTimeoutExceeded
+		return fmt.Errorf("error: %d", codes.DeadlineExceeded)
 	case errors.Is(err, errs.ErrNotFound):
-		return errs.ErrNotFound
+		return fmt.Errorf("error: %d", codes.NotFound)
 
 	//model user errors
 	case errors.Is(err, models.ErrEmptyName),
@@ -30,10 +32,10 @@ func responseErr(err error) error {
 		errors.Is(err, models.ErrInvalidName),
 		errors.Is(err, models.ErrInvalidPhone),
 		errors.Is(err, models.ErrInvalidUSerId):
-		return errs.ErrBadRequest
+		return fmt.Errorf("error: %d", codes.InvalidArgument)
 
 	// default
 	default:
-		return errs.ErrSomethingWentWrong
+		return fmt.Errorf("error: %d", codes.Internal)
 	}
 }

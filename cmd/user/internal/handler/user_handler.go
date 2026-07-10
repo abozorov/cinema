@@ -7,6 +7,7 @@ import (
 	"github.com/abozorov/cinema/cmd/user/internal/models"
 	userv1 "github.com/abozorov/cinema/grpc_api/generate/userpb/user/v1"
 	"github.com/abozorov/cinema/pkg/logger"
+	"google.golang.org/grpc/codes"
 )
 
 type Handler struct {
@@ -77,20 +78,20 @@ func (h *Handler) GetByID(ctx context.Context, r *userv1.GetUserRequest) (*userv
 func (h *Handler) Update(ctx context.Context, r *userv1.UpdateUserRequest) (*userv1.UpdateUserResponse, error) {
 	// userv1.UpdateUserRequest -> models.user
 	user := &models.User{
-		ID: int(r.Id),
-		Name: r.Name,
+		ID:    int(r.Id),
+		Name:  r.Name,
 		Phone: r.Phone,
 	}
-	
+
 	// update
 	err := h.service.Update(ctx, user)
 	if err != nil {
-		return &userv1.UpdateUserResponse{}, responseErr(err) 
+		return &userv1.UpdateUserResponse{}, responseErr(err)
 	}
 
 	// answer
 	return &userv1.UpdateUserResponse{
-		Code: 200,
+		Code:    int64(codes.OK),
 		Message: "User update successfuly!",
 	}, nil
 }
