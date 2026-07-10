@@ -1,6 +1,6 @@
 package service
 
-import "github.com/abozorov/cinema/user_service/internal/repo"
+import "github.com/abozorov/cinema/cmd/user/internal/repo"
 
 type Service struct {
 	repo *repo.Repo

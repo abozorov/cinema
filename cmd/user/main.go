@@ -5,8 +5,8 @@ import (
 	"os"
 	"path"
 
-	"github.com/abozorov/cinema/user_service/config"
-	"github.com/abozorov/cinema/user_service/internal/app"
+	"github.com/abozorov/cinema/cmd/user/config"
+	"github.com/abozorov/cinema/cmd/user/internal/app"
 )
 
 func main() {

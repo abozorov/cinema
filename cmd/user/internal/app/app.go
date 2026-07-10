@@ -7,14 +7,14 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/abozorov/cinema/user_service/config"
-	"github.com/abozorov/cinema/user_service/internal/handler"
-	"github.com/abozorov/cinema/user_service/internal/repo"
-	"github.com/abozorov/cinema/user_service/internal/service"
-	"github.com/abozorov/cinema/user_service/pkg/grpcserver"
-	"github.com/abozorov/cinema/user_service/pkg/logger"
-	"github.com/abozorov/cinema/user_service/pkg/postgres"
-	userv1 "github.com/abozorov/cinema/user_service/userpb/user/v1"
+	"github.com/abozorov/cinema/cmd/user/config"
+	"github.com/abozorov/cinema/cmd/user/internal/handler"
+	"github.com/abozorov/cinema/cmd/user/internal/repo"
+	"github.com/abozorov/cinema/cmd/user/internal/service"
+	userv1 "github.com/abozorov/cinema/grpc_api/generate/userpb/user/v1"
+	"github.com/abozorov/cinema/pkg/grpcserver"
+	"github.com/abozorov/cinema/pkg/logger"
+	"github.com/abozorov/cinema/pkg/postgres"
 )
 
 type serv struct {
@@ -64,7 +64,15 @@ func Run(cfg *config.Config) {
 	}
 
 	// create db connection
-	pg, err := postgres.NewConn(*cfg)
+	conn := fmt.Sprintf(
+		"postgres://%s:%s@%s:%s/%s?sslmode=disable",
+		cfg.PG.User,
+		cfg.PG.Password,
+		cfg.PG.Host,
+		cfg.PG.Port,
+		cfg.PG.Name,
+	)
+	pg, err := postgres.NewConn(conn)
 	if err != nil {
 		logger.Fatal(fmt.Sprintf("app - Run - postgres.New: %s", err.Error()))
 	}

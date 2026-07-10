@@ -5,7 +5,7 @@ import (
 	"errors"
 	"net"
 
-	"github.com/abozorov/cinema/user_service/pkg/logger"
+	"github.com/abozorov/cinema/pkg/logger"
 	"go.uber.org/zap"
 	"golang.org/x/sync/errgroup"
 	"google.golang.org/grpc"

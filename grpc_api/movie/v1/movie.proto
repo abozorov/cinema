@@ -64,13 +64,3 @@ message DeleteMovieResponse {
   int64 code = 1;
   string message = 2;
 }
-
-//
-//    CREATE TABLE movies (
-//    id SERIAL PRIMARY KEY,
-//    title VARCHAR(255) NOT NULL,
-//    description TEXT NOT NULL,
-//    duration INT NOT NULL,
-//    created_at TIMESTAMP NOT NULL,
-//    updated_at TIMESTAMP NOT NULL
-//    );
