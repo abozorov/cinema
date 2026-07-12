@@ -9,9 +9,9 @@ import (
 
 	"github.com/abozorov/cinema/cmd/movie/internal/config"
 	"github.com/abozorov/cinema/cmd/movie/internal/handler"
+	"github.com/abozorov/cinema/cmd/movie/internal/repo"
 	"github.com/abozorov/cinema/cmd/movie/internal/service"
 	moviev1 "github.com/abozorov/cinema/grpc_api/generate/moviepb/movie/v1"
-	"github.com/abozorov/cinema/internal/repo"
 	"github.com/abozorov/cinema/pkg/grpcserver"
 	"github.com/abozorov/cinema/pkg/logger"
 	"github.com/abozorov/cinema/pkg/postgres"

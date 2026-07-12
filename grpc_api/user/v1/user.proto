@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package cinema.user.v1;
 
-option go_package = "github.com/abozorov/cinema/user_service/userpb/v1;user";
+option go_package = "github.com/abozorov/cinema/grpc_api/userpb/user/v1;user";
 
 
 service UserService {

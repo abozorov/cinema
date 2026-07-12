@@ -27,11 +27,11 @@ func (h *Handler) Add(ctx context.Context, r *userv1.CreateUserRequest) (*userv1
 
 	// userv1.CreateUserRequest -> models.user
 	user, err := models.NewUser(
-		r.Name,
-		r.Email,
-		r.Phone,
-		r.Password,
-		int(r.Age),
+		r.GetName(),
+		r.GetEmail(),
+		r.GetPhone(),
+		r.GetPassword(),
+		int(r.GetAge()),
 	)
 	if err != nil {
 		h.logger.Error(fmt.Sprintf("user_handler.Add: %s", err))
@@ -42,7 +42,7 @@ func (h *Handler) Add(ctx context.Context, r *userv1.CreateUserRequest) (*userv1
 	id, err := h.service.Add(ctx, user)
 	if err != nil {
 		h.logger.Error(fmt.Sprintf("user_handler.Add: %s", err))
-		return &userv1.CreateUserResponse{}, responseErr(err)
+		return nil, responseErr(err)
 	}
 
 	// return
@@ -53,13 +53,13 @@ func (h *Handler) Add(ctx context.Context, r *userv1.CreateUserRequest) (*userv1
 
 func (h *Handler) GetByID(ctx context.Context, r *userv1.GetUserRequest) (*userv1.GetUserResponse, error) {
 	// get id
-	id := int(r.Id)
+	id := int(r.GetId())
 
 	// get by id
 	user, err := h.service.GetByID(ctx, id)
 	if err != nil {
 		h.logger.Error(fmt.Sprintf("user_handler.GetByID: %s", err))
-		return &userv1.GetUserResponse{}, responseErr(err)
+		return nil, responseErr(err)
 	}
 
 	// transform model.user -> userResponse
@@ -78,15 +78,15 @@ func (h *Handler) GetByID(ctx context.Context, r *userv1.GetUserRequest) (*userv
 func (h *Handler) Update(ctx context.Context, r *userv1.UpdateUserRequest) (*userv1.UpdateUserResponse, error) {
 	// userv1.UpdateUserRequest -> models.user
 	user := &models.User{
-		ID:    int(r.Id),
-		Name:  r.Name,
-		Phone: r.Phone,
+		ID:    int(r.GetId()),
+		Name:  r.GetName(),
+		Phone: r.GetPhone(),
 	}
 
 	// update
 	err := h.service.Update(ctx, user)
 	if err != nil {
-		return &userv1.UpdateUserResponse{}, responseErr(err)
+		return nil, responseErr(err)
 	}
 
 	// answer

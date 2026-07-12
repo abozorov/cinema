@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package cinema.movie.v1;
 
-option go_package = "github.com/abozorov/cinema/movie_service/moviepb/v1;movie";
+option go_package = "github.com/abozorov/cinema/grpc_api/moviepb/v1;movie";
 
 service MovieService {
   rpc Create(CreateMovieRequest) returns (CreateMovieResponse);
