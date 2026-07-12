@@ -6,6 +6,8 @@ run_user_service:
 run_movie_service:
 	go run cmd/movie/main.go
 
+run_booking_service:
+	go run cmd/booking/main.go
 
 .PHONY:
 build_user_proto: 

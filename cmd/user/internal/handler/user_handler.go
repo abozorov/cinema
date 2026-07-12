@@ -58,7 +58,7 @@ func (h *Handler) GetByID(ctx context.Context, r *userv1.GetUserRequest) (*userv
 	// get by id
 	user, err := h.service.GetByID(ctx, id)
 	if err != nil {
-		h.logger.Error(fmt.Sprintf("user_handler.GetByID: %s", err))
+		h.logger.Error(fmt.Sprintf("user_handler.GetByID: %d %s", id,  err))
 		return nil, responseErr(err)
 	}
 
