@@ -28,6 +28,8 @@ var (
 	ErrIncorrectPassword        = errors.New("incorrect password")
 	ErrInvalidToken             = errors.New("token is invalid")
 
+	ErrAlreadyExists = errors.New("already exists")
+
 	// NotFound
 	ErrNotFound = errors.New("not found")
 )

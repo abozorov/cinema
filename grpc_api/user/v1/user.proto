@@ -8,6 +8,7 @@ option go_package = "github.com/abozorov/cinema/grpc_api/userpb/user/v1;user";
 service UserService {
     rpc Add(CreateUserRequest) returns (CreateUserResponse);
     rpc GetByID(GetUserRequest) returns (GetUserResponse);
+    rpc GetByEmail(GetUserByEamilRequest) returns (GetUserResponse);
     rpc Update(UpdateUserRequest) returns (UpdateUserResponse);
 }
 
@@ -25,6 +26,10 @@ message CreateUserResponse {
 
 message GetUserRequest {
   int64 id = 1;
+}
+
+message GetUserByEamilRequest {
+  string email = 1;
 }
 
 message GetUserResponse {

@@ -1,7 +1,6 @@
 package models
 
 import (
-	"context"
 	"errors"
 	"regexp"
 	"strings"
@@ -17,21 +16,6 @@ type User struct {
 	PasswordHash string
 	Age          int
 	Role         string
-}
-
-// UserService определяет бизнес-логику для работы с пользователями
-type UserService interface {
-	Add(ctx context.Context, user *User) (int, error)
-	GetByID(ctx context.Context, id int) (*User, error)
-	Update(ctx context.Context, user *User) error
-}
-
-// UserRepository определяет интерфейс для работы с пользователями
-type UserRepository interface {
-	Add(ctx context.Context, user *User) (int, error)
-	GetByID(ctx context.Context, id int) (*User, error)
-	GetByEmail(ctx context.Context, email string) (*User, error)
-	Update(ctx context.Context, user *User) error
 }
 
 // Validation errors

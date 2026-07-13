@@ -20,6 +20,7 @@ const _ = grpc.SupportPackageIsVersion7
 type UserServiceClient interface {
 	Add(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*CreateUserResponse, error)
 	GetByID(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*GetUserResponse, error)
+	GetByEmail(ctx context.Context, in *GetUserByEamilRequest, opts ...grpc.CallOption) (*GetUserResponse, error)
 	Update(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UpdateUserResponse, error)
 }
 
@@ -49,6 +50,15 @@ func (c *userServiceClient) GetByID(ctx context.Context, in *GetUserRequest, opt
 	return out, nil
 }
 
+func (c *userServiceClient) GetByEmail(ctx context.Context, in *GetUserByEamilRequest, opts ...grpc.CallOption) (*GetUserResponse, error) {
+	out := new(GetUserResponse)
+	err := c.cc.Invoke(ctx, "/cinema.user.v1.UserService/GetByEmail", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *userServiceClient) Update(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UpdateUserResponse, error) {
 	out := new(UpdateUserResponse)
 	err := c.cc.Invoke(ctx, "/cinema.user.v1.UserService/Update", in, out, opts...)
@@ -64,6 +74,7 @@ func (c *userServiceClient) Update(ctx context.Context, in *UpdateUserRequest, o
 type UserServiceServer interface {
 	Add(context.Context, *CreateUserRequest) (*CreateUserResponse, error)
 	GetByID(context.Context, *GetUserRequest) (*GetUserResponse, error)
+	GetByEmail(context.Context, *GetUserByEamilRequest) (*GetUserResponse, error)
 	Update(context.Context, *UpdateUserRequest) (*UpdateUserResponse, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
@@ -77,6 +88,9 @@ func (UnimplementedUserServiceServer) Add(context.Context, *CreateUserRequest) (
 }
 func (UnimplementedUserServiceServer) GetByID(context.Context, *GetUserRequest) (*GetUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetByID not implemented")
+}
+func (UnimplementedUserServiceServer) GetByEmail(context.Context, *GetUserByEamilRequest) (*GetUserResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetByEmail not implemented")
 }
 func (UnimplementedUserServiceServer) Update(context.Context, *UpdateUserRequest) (*UpdateUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Update not implemented")
@@ -130,6 +144,24 @@ func _UserService_GetByID_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_GetByEmail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserByEamilRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).GetByEmail(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/cinema.user.v1.UserService/GetByEmail",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).GetByEmail(ctx, req.(*GetUserByEamilRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _UserService_Update_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UpdateUserRequest)
 	if err := dec(in); err != nil {
@@ -162,6 +194,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetByID",
 			Handler:    _UserService_GetByID_Handler,
+		},
+		{
+			MethodName: "GetByEmail",
+			Handler:    _UserService_GetByEmail_Handler,
 		},
 		{
 			MethodName: "Update",

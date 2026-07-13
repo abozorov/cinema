@@ -9,6 +9,9 @@ run_movie_service:
 run_booking_service:
 	go run cmd/booking/main.go
 
+run_api:
+	go run cmd/api_gateway/main.go
+
 .PHONY:
 build_user_proto: 
 	protoc \
