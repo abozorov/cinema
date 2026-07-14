@@ -3,9 +3,9 @@ package service
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/abozorov/cinema/cmd/user/internal/models"
-	"github.com/abozorov/cinema/pkg/password"
 )
 
 type Service struct {
@@ -26,10 +26,10 @@ func (s *Service) Add(ctx context.Context, user *models.User) (int, error) {
 	}
 
 	// hash password
-	user.PasswordHash, err = password.Hash(user.PasswordHash)
-	if err != nil {
-		return 0, fmt.Errorf("user_service.Add: %w", err)
-	}
+	// user.PasswordHash, err = password.Hash(user.PasswordHash)
+	// if err != nil {
+	// 	return 0, fmt.Errorf("user_service.Add: %w", err)
+	// }
 
 	// saving in db
 	id, err := s.repo.Add(ctx, user)
@@ -51,6 +51,21 @@ func (s *Service) GetByID(ctx context.Context, id int) (*models.User, error) {
 	user, err := s.repo.GetByID(ctx, id)
 	if err != nil {
 		return &models.User{}, fmt.Errorf("user_service.GetUserByID: %w", err)
+	}
+	return user, nil
+}
+
+func (s *Service) GetByEmail(ctx context.Context, email string) (*models.User, error) {
+	// validate id
+	email = strings.TrimSpace(email)
+	if email == "" {
+		return &models.User{}, fmt.Errorf("user_service.GetByEmail: %w", models.ErrInvalidEmail) 
+	}
+
+	// get by email
+	user, err := s.repo.GetByEmail(ctx, email)
+	if err != nil {
+		return &models.User{}, fmt.Errorf("user_service.GetByEmail: %w", err)
 	}
 	return user, nil
 }

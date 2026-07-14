@@ -34,7 +34,10 @@ func Run(conf *config.Config) {
 	}
 
 	// create SecretJWT
-	sJWT := jwt.NewSecretJWT(conf.JWT.SecretToken)
+	sJWT := jwt.NewSecretJWT(
+		conf.JWT.SecretToken,
+		time.Duration(conf.JWT.JWTLiveTime*int(time.Second)),
+	)
 
 	// create memCache
 	memCache := cache.New(time.Minute*5, time.Second*10)
@@ -75,9 +78,9 @@ func Run(conf *config.Config) {
 	)
 
 	router := api.NewRouter(&api.Option{
-		Conf:        conf,
-		Midddleware: middleware.NewMiddlware(sJWT),
-		Handler:     handler,
+		Conf:       conf,
+		Middleware: middleware.NewMiddlware(sJWT),
+		Handler:    handler,
 	})
 
 	// init servers

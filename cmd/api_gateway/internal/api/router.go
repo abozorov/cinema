@@ -8,14 +8,14 @@ import (
 )
 
 type Option struct {
-	Conf        *config.Config
-	Midddleware *middleware.Middleware
-	Handler     *handlers.Handler
+	Conf       *config.Config
+	Middleware *middleware.Middleware
+	Handler    *handlers.Handler
 }
 
 func NewRouter(opt *Option) *gin.Engine {
 	router := gin.New()
-	router.Use(gin.Recovery(), opt.Midddleware.Logging())
+	router.Use(gin.Recovery(), opt.Middleware.Logging())
 
 	router.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{"message": "pong"})
@@ -25,30 +25,34 @@ func NewRouter(opt *Option) *gin.Engine {
 	authApi := router.Group("/api/auth")
 	authApi.POST("register", opt.Handler.Register) // registration
 	authApi.POST("verify", opt.Handler.Verify)     // verify
-	// authApi.POST("login")    // login
-	// // authApi.POST("refresh")    // login
+	authApi.POST("login", opt.Handler.Login)       // login
+	// // authApi.POST("refresh")    // refresh access token
 
 	// user
 	userApi := router.Group("/api/user")
+	userApi.Use(opt.Middleware.Auth())
 	userApi.GET("/:id", opt.Handler.GetGyId)      //get by id
 	userApi.PATCH("/:id", opt.Handler.UpdateById) //update by id
 
 	// movie
 	movieApi := router.Group("/api/movie")
-	movieApi.POST("", opt.Handler.CreateMovie)
+	movieApi.Use(opt.Middleware.Auth())
 	movieApi.GET("/:id", opt.Handler.GetMovieById)
-	movieApi.PUT("/:id", opt.Handler.UpdateMovie)
 	movieApi.GET("", opt.Handler.ListMovies)
 
 	// // booking
 	bookingApi := router.Group("/api/booking")
-	bookingApi.POST("", opt.Handler.CreateBooking)
+	bookingApi.Use(opt.Middleware.Auth())
 	bookingApi.GET("/:id", opt.Handler.GetBooking)
+	bookingApi.POST("", opt.Handler.CreateBooking)
 	bookingApi.GET("/user/:id", opt.Handler.GetUserBookings)
 	bookingApi.DELETE("/:id", opt.Handler.CancelBooking)
 
 	// // admin
-	// adminApi := router.Group("/api/admin")
+	adminApi := router.Group("/api/admin")
+	adminApi.Use(opt.Middleware.AuthAdmin())
+	adminApi.POST("movie", opt.Handler.CreateMovie)
+	adminApi.PATCH("movie/:id", opt.Handler.UpdateMovie)
 
 	return router
 }

@@ -9,17 +9,19 @@ import (
 type RegisterRequest struct {
 	Name     string `json:"name"`
 	Email    string `json:"email"`
+	Phone    string `json:"phone"`
 	Password string `json:"password"`
 }
 
 func (r *RegisterRequest) Validate() error {
 	r.Name = strings.TrimSpace(r.Name)
 	r.Email = strings.TrimSpace(r.Email)
+	r.Phone = strings.TrimSpace(r.Phone)
 	r.Password = strings.TrimSpace(r.Password)
 
-	// if r.Name == "" || r.Email == "" || !isEmail(r.Email) || len(r.Password) < 8 {
-	// 	return errs.ErrBadRequestBody
-	// }
+	if r.Name == "" || r.Email == "" || r.Phone == "" || len(r.Password) < 8 {
+		return errs.ErrBadRequestBody
+	}
 	return nil
 }
 

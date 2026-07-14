@@ -65,7 +65,8 @@ func (r *Repo) GetByID(ctx context.Context, id int) (*models.User, error) {
 			email,
 			phone,
 			password_hash,
-			age
+			age,
+			role
 		 FROM users
 		 WHERE id = $1;
 	`
@@ -82,6 +83,7 @@ func (r *Repo) GetByID(ctx context.Context, id int) (*models.User, error) {
 		&phone,
 		&user.PasswordHash,
 		&user.Age,
+		&user.Role,
 	)
 	if err != nil {
 		return &models.User{},
@@ -98,7 +100,8 @@ func (r *Repo) GetByEmail(ctx context.Context, email string) (*models.User, erro
 			email,
 			phone,
 			password_hash,
-			age
+			age,
+			role
 		 FROM users
 		 WHERE email = $1;
 	`
@@ -115,10 +118,11 @@ func (r *Repo) GetByEmail(ctx context.Context, email string) (*models.User, erro
 		&phone,
 		&user.PasswordHash,
 		&user.Age,
+		&user.Role,
 	)
 	if err != nil {
 		return &models.User{},
-			fmt.Errorf("user_repo.GetByID: %w", postgresToErrs(err))
+			fmt.Errorf("user_repo.GetByEmail: %w", postgresToErrs(err))
 	}
 	user.Phone = phone.String
 	return &user, nil

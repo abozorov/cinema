@@ -38,6 +38,8 @@ message GetUserResponse {
   string email = 3;
   string phone = 4;
   int32 age = 5;
+  string password = 6;
+  string role = 7;
 }
 
 message UpdateUserRequest {

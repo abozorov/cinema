@@ -50,6 +50,7 @@ type (
 
 	jwt struct {
 		SecretToken string `env:"JWT_SECRET"`
+		JWTLiveTime int    `env:"JWT_LIVE_TIME"`
 	}
 
 	email struct {

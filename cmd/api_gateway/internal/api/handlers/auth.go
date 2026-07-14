@@ -48,3 +48,25 @@ func (h *Handler) Verify(c *gin.Context) {
 
 	c.String(http.StatusOK, fmt.Sprintf("verification was successful, user id %d", id))
 }
+
+func (h *Handler) Login(c *gin.Context) {
+	// get email & password
+	var req models.LoginRequest
+	err := c.ShouldBindJSON(&req)
+	if err != nil {
+		h.logger.Error("user_handler.Login: ", zap.String("error", err.Error()))
+		errsToHttp(c.Writer, errs.ErrBadRequestBody)
+		return
+	}
+
+	// login
+	tokens, err := h.userService.Login(c.Request.Context(), req)
+	if err != nil {
+		h.logger.Error("user_handler.Login: ", zap.String("error", err.Error()))
+		errsToHttp(c.Writer, err)
+		return
+	}
+
+	// answer
+	c.JSON(http.StatusOK, tokens)
+}

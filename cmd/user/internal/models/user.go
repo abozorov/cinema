@@ -23,6 +23,7 @@ type User struct {
 type UserService interface {
 	Add(ctx context.Context, user *User) (int, error)
 	GetByID(ctx context.Context, id int) (*User, error)
+	GetByEmail(ctx context.Context, email string) (*User, error)
 	Update(ctx context.Context, user *User) error
 }
 

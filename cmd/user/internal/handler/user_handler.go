@@ -58,17 +58,45 @@ func (h *Handler) GetByID(ctx context.Context, r *userv1.GetUserRequest) (*userv
 	// get by id
 	user, err := h.service.GetByID(ctx, id)
 	if err != nil {
-		h.logger.Error(fmt.Sprintf("user_handler.GetByID: %d %s", id,  err))
+		h.logger.Error(fmt.Sprintf("user_handler.GetByID: %d %s", id, err))
 		return nil, responseErr(err)
 	}
 
 	// transform model.user -> userResponse
 	responseUser := &userv1.GetUserResponse{
-		Id:    int64(user.ID),
-		Name:  user.Name,
-		Email: user.Email,
-		Phone: user.Phone,
-		Age:   int32(user.Age),
+		Id:       int64(user.ID),
+		Name:     user.Name,
+		Email:    user.Email,
+		Phone:    user.Phone,
+		Age:      int32(user.Age),
+		Role:     user.Role,
+		Password: user.PasswordHash,
+	}
+
+	// return
+	return responseUser, nil
+}
+
+func (h *Handler) GetByEmail(ctx context.Context, r *userv1.GetUserByEamilRequest) (*userv1.GetUserResponse, error) {
+	// get id
+	email := r.GetEmail()
+
+	// get by email
+	user, err := h.service.GetByEmail(ctx, email)
+	if err != nil {
+		h.logger.Error(fmt.Sprintf("user_handler.GetByID: %s %s", email, err))
+		return nil, responseErr(err)
+	}
+
+	// transform model.user -> userResponse
+	responseUser := &userv1.GetUserResponse{
+		Id:       int64(user.ID),
+		Name:     user.Name,
+		Email:    user.Email,
+		Phone:    user.Phone,
+		Age:      int32(user.Age),
+		Role:     user.Role,
+		Password: user.PasswordHash,
 	}
 
 	// return

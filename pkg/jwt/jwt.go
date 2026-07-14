@@ -7,12 +7,9 @@ import (
 	jwt "github.com/golang-jwt/jwt/v5"
 )
 
-var (
-	JWTLiveTime = 10 * time.Minute
-)
-
 type JWTSecret struct {
-	secret []byte
+	secret   []byte
+	liveTime time.Duration
 }
 
 type Claims struct {
@@ -23,9 +20,10 @@ type Claims struct {
 	jwt.RegisteredClaims
 }
 
-func NewSecretJWT(secret string) *JWTSecret {
+func NewSecretJWT(secret string, liveTime time.Duration) *JWTSecret {
 	return &JWTSecret{
 		secret: []byte(secret),
+		liveTime: liveTime,
 	}
 }
 
@@ -36,7 +34,7 @@ func (s *JWTSecret) GenerateToken(userID int, email, role string) (string, error
 		Role:   role,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(
-				time.Now().Add(JWTLiveTime)),
+				time.Now().Add(s.liveTime)),
 		},
 	}
 
