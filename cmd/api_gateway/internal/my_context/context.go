@@ -6,4 +6,5 @@ const (
 	UserIDKey contextKey = "user_id"
 	EmailKey  contextKey = "email"
 	TrackKey  contextKey = "track"
+	RoleKey   contextKey = "role"
 )

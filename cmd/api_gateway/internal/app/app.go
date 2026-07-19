@@ -18,11 +18,11 @@ import (
 	booking_service "github.com/abozorov/cinema/cmd/api_gateway/internal/services/booking_service"
 	movie_service "github.com/abozorov/cinema/cmd/api_gateway/internal/services/movie_service"
 	user_service "github.com/abozorov/cinema/cmd/api_gateway/internal/services/user_service"
+	"github.com/abozorov/cinema/pkg/cache"
 	"github.com/abozorov/cinema/pkg/jwt"
 	"github.com/abozorov/cinema/pkg/logger"
 	mailsender "github.com/abozorov/cinema/pkg/mail_sender"
 
-	"github.com/patrickmn/go-cache"
 	"go.uber.org/zap"
 )
 
@@ -40,7 +40,12 @@ func Run(conf *config.Config) {
 	)
 
 	// create memCache
-	memCache := cache.New(time.Minute*5, time.Second*10)
+	memCache, err := cache.New(context.Background(), ":6379")
+	// memCache, err := cache.New(context.Background(), "redis:6379")
+	if err != nil {
+		logger.Error(err.Error())
+		return
+	}
 
 	// make email sender
 	mailSender := mailsender.NewMailSender(
